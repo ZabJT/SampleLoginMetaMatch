@@ -1,0 +1,232 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica', sans-serif;
+}
+
+body {
+    background: linear-gradient(rgba(36, 33, 49, 0.8), rgba(36, 33, 49, 0.8)), url('../assets/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    padding: 0 8rem;
+    width: 100%;
+    color: white;
+}
+
+header img {
+    width: 9rem;
+    height: auto;
+}
+
+.btn {
+    display: inline-flex; 
+    color: white;
+    border-radius: 1.875rem;
+    padding: 0.5rem 3rem;
+    font-size: 1rem;
+    text-align: center;
+    white-space: normal; 
+    word-wrap: break-word; 
+    line-height: 1.5; 
+    max-width: 100%;
+    align-self: center;
+    cursor: pointer;
+}
+
+p {
+    color: #FFF;
+    font-style: normal;
+    font-weight: 200;
+    line-height: 2rem;
+}
+
+.bold-text {
+    font-weight: 900;
+}
+
+.circle-shine {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 33.125rem;
+    height: 33.125rem;
+    flex-shrink: 0;
+    border-radius: 33.125rem;
+    background: #d2c9fb60;
+    mix-blend-mode: overlay;
+    filter: blur(100px);
+}
+
+.container {
+    position: absolute;
+    padding: 10rem 2rem;
+}
+
+.login-page {
+    display:block;
+}
+
+.register-page {
+    display:block;
+}
+
+.register-container {
+    width: calc(100% - 16rem);
+    min-width: 2rem;
+    height: 60vh;
+    max-height: 50rem;
+    min-height: 20rem;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 2.5rem;
+    border: 0.5px solid #9D87FF;
+    background: rgba(36, 33, 49, 0.50);
+    backdrop-filter: blur(5px);
+    overflow: hidden; /* Prevent content from spilling out */
+    padding: 4rem;
+}
+
+.register-content {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.text-opacity {
+    opacity: 0.7;
+}
+
+.color-title {
+    width: fit-content;
+    display: inline-block; /* Make the gradient apply only to the text */
+    white-space: normal; /* Allow text to wrap */
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 900;
+    background: linear-gradient(113deg, #EAE6FF 22.73%, #9D87FF 67.76%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    word-wrap: break-word; /* Ensure long words break */
+}
+
+
+.button-transparent {
+    border: 1px solid #9D87FF;
+    background-color: transparent;
+}
+
+.button-solid {
+    border-radius: 1.875rem;
+    background: #9D87FF;
+}
+  
+.login-container {
+    width: 40%;
+    min-width: 2rem;
+    height: 87vh;
+    max-height: 50rem;
+    min-height: 20rem;
+    top: 55%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    border-radius: 2.5rem;
+    background: #191722;
+    overflow: hidden; /* Prevent content from spilling out */
+    padding: 4rem;
+}
+
+.login-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.input-group {
+    display: inline-flex;
+    position: relative; /* Enable positioning of child elements */
+    width: 100%;
+}
+
+.input-type {
+    background: transparent;
+    color: white;
+    border-radius: 2.5rem;
+    border: 1px solid #9D87FF;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    width: 100%;
+    cursor: auto;
+    padding-right: 4rem; /* Add padding to the right for the icon */
+}
+
+.input-group i {
+    position: absolute;
+    right: 2rem; /* Position the icon towards the right */
+    top: 50%;
+    transform: translateY(-50%); /* Vertically center the icon */
+    color: white; /* Set the icon color */
+    font-size: 1.2rem; /* Adjust the size of the icon */
+}
+
+.forgot-password {
+    align-self: self-end;
+    opacity: 0.5;
+}
+
+
+.forgot-password a {
+    color: white;
+}
+
+.or-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.line {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: white;
+    opacity: 0.3;
+}
+
+.google-sign-in {
+display: inline-flex;
+
+
+gap: 1rem;
+    
+    svg {
+        width: 1.5em;
+        height: auto;
+    }
+}
+
+
+
+
+
+
+
+
+
+
