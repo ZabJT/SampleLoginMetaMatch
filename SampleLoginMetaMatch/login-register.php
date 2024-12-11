@@ -17,7 +17,7 @@
 
     <div class="circle-shine"></div>
     
-    <div class="login-page" id="login" style="display: block;">
+    <div class="login-page" id="login" style="display: none;">
         <div class="container sliding-register-container">
             <div class="sliding-register-content">
                 <h1 class="form-title">Don't have an account?</h1>
@@ -32,14 +32,33 @@
                 <h1 class="color-title">Log In</h1>
                 <p class="text-opacity">Enter your email to receive a one-time passcode</p>
                 <br>
+
+                <?php
+                    // Display success message if account is successfully registered
+                    if (isset($_SESSION['success'])) {
+                        echo '<p style="color: green;">' . $_SESSION['success'] . '</p>';
+                        unset($_SESSION['success']); // Clear the success message after displaying it
+                    }
+
+                    // Display error message if email already exists
+                    if (isset($_GET['error']) && $_GET['error'] == 'email_exists') {
+                        echo '<p style="color: red;">Email address already exists!</p>';
+                    }
+
+                    // Display session error message if it exists
+                    if (isset($_SESSION['error'])) {
+                        echo '<p style="color: red;">' . $_SESSION['error'] . '</p>';
+                        unset($_SESSION['error']); // Clear the error message after displaying it
+                    }
+                ?>
     
-                <form class="login-form" method="post"> 
+                <form class="login-form" method="post" action="register.php"> 
                     <div class="input-group">
                         <i class="fas fa-envelope"></i>
                         <input class="input-type" type="email" name="email" id="email" placeholder="Enter your email" required>
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-lock" id="toggle-password-login" onclick="togglePassword('password', this)"></i>
                         <input class="input-type" type="password" name="password" id="password" placeholder=" Enter your password" required>
                     </div>      
                     
@@ -47,7 +66,7 @@
                     <p class="forgot-password">
                         <a href="#">Forgot Password?</a>
                     </p>
-                    <input type="submit" class="btn button-solid" value="Send 4-digit code" name="signIn">
+                    <input type="submit" class="btn button-solid" value="Log in" name="signIn">
                 </form>
                 <br>
                 
@@ -73,7 +92,7 @@
         </div>
     </div>
 
-    <div class="register-page" id="register" style="display: none;">
+    <div class="register-page" id="register" style="display: block;">
         <div class="container sliding-login-container">
             <div class="sliding-login-content">
                 <h1 class="form-title">Have an account?</h1>
@@ -88,8 +107,27 @@
                 <h1 class="color-title">Register</h1>
                 <p class="text-opacity">Sign up the necessary information below</p>
                 <br>
-    
-                <form class="register-form" method="post"> 
+                    
+                <?php
+                    // Display success message if account is successfully registered
+                    if (isset($_SESSION['success'])) {
+                        echo '<p style="color: green;">' . $_SESSION['success'] . '</p>';
+                        unset($_SESSION['success']); // Clear the success message after displaying it
+                    }
+
+                    // Display error message if email already exists
+                    if (isset($_GET['error']) && $_GET['error'] == 'email_exists') {
+                        echo '<p style="color: red;">Email address already exists!</p>';
+                    }
+
+                    // Display session error message if it exists
+                    if (isset($_SESSION['error'])) {
+                        echo '<p style="color: red;">' . $_SESSION['error'] . '</p>';
+                        unset($_SESSION['error']); // Clear the error message after displaying it
+                    }
+                ?>
+
+                <form class="register-form" method="post" action="register.php"> 
                     <div class="input-group">
                         <i class="fas fa-user"></i>
                         <input class="input-type" type="text" name="name" id="name" placeholder="Enter your name" required>
@@ -99,11 +137,11 @@
                         <input class="input-type" type="email" name="email" id="email" placeholder="Enter your email" required>
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input class="input-type" type="password" name="password" id="password" placeholder=" Enter your password" required>
+                    <i class="fas fa-lock" id="toggle-password-register" onclick="togglePassword('password', this)"></i>
+                    <input class="input-type" type="password" name="password" id="password" placeholder=" Enter your password" required>
                     </div>      
                     
-                    <input type="submit" class="btn button-solid" value="Sign up" name="signIn">
+                    <input type="submit" class="btn button-solid" value="Sign up" name="signUp">
                 </form>
                 <br>
                 
