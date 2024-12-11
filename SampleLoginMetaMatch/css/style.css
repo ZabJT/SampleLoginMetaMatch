@@ -191,6 +191,62 @@ p {
     padding-right: 4rem; /* Add padding to the right for the icon */
 }
 
+/* Enhance user experience by adding a smooth transition to hover effects */
+.button-transparent:hover,
+.button-solid:hover {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Improve code organization by grouping related styles together */
+/* Header Styles */
+header img {
+  width: 9rem;
+  height: auto;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  color: white;
+  border-radius: 1.875rem;
+  padding: 0.5rem 3rem;
+  font-size: 1rem;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.5;
+  max-width: 100%;
+  align-self: center;
+  cursor: pointer;
+}
+
+.button-transparent {
+  border: 1px solid #9D87FF;
+  background-color: transparent;
+}
+
+.button-solid {
+  border: none;
+  border-radius: 1.875rem;
+  background: #9D87FF;
+}
+
+/* Form Styles */
+.input-group {
+  display: inline-flex;
+  position: relative;
+  width: 100%;
+}
+
+.input-type {
+  background: transparent;
+  color: white;
+  border-radius: 2.5rem;
+  border: 1px solid #9D87FF;
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  line-height: 1.5
+}
 
 .forgot-password {
     align-self: self-end;
@@ -307,6 +363,12 @@ p {
     align-items: center;
     gap: 1rem;
 }
+
+
+
+
+
+
 
 
 
