@@ -58,8 +58,8 @@
                         <input class="input-type" type="email" name="email" id="email" placeholder="Enter your email" required>
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-lock" id="toggle-password-login" onclick="togglePassword('password', this)"></i>
-                        <input class="input-type" type="password" name="password" id="password" placeholder=" Enter your password" required>
+                        <i class="fas fa-lock" id="toggle-password-login" onclick="togglePassword('password-login', this)"></i>
+                        <input class="input-type" type="password" name="password" id="password-login" placeholder=" Enter your password" required>
                     </div>      
                     
                     
@@ -137,8 +137,8 @@
                         <input class="input-type" type="email" name="email" id="email" placeholder="Enter your email" required>
                     </div>
                     <div class="input-group">
-                    <i class="fas fa-lock" id="toggle-password-register" onclick="togglePassword('password', this)"></i>
-                    <input class="input-type" type="password" name="password" id="password" placeholder=" Enter your password" required>
+                    <i class="fas fa-lock" id="toggle-password-register" onclick="togglePassword('password-register', this)"></i>
+                    <input class="input-type" type="password" name="password" id="password-register" placeholder=" Enter your password" required>
                     </div>      
                     
                     <input type="submit" class="btn button-solid" value="Sign up" name="signUp">

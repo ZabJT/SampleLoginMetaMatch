@@ -4,8 +4,8 @@ ini_set('display_errors', 1);
 session_start();
 include 'connect.php';
 
-$error_message = ""; // Initialize error message variable
-$success_message = ""; // Initialize success message variable
+$error_message = ""; 
+$success_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['signUp'])) {
@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Redirect to login-register.php if email exists
             header("Location: login-register.php?error=email_exists");
             exit();
-        } else {
+        } 
+        else {
             // Insert new user
             $insertQuery = "INSERT INTO users (name,email,password) VALUES ('$name','$email','$password')";
             if ($conn->query($insertQuery) === true) {
@@ -49,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['email'] = $row['email'];
             header("Location: homepage.php");
             exit();
-        } else {
-            // Handle incorrect login
+        } 
+        else {
             $_SESSION['error'] = "Not found, incorrect email or password";
         }
     }
