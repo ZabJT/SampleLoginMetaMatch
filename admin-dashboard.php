@@ -4,64 +4,68 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-if (!isset($_SESSION['name']) || $_SESSION['role'] !== 'admin') {
-    header('Location: login-register.php');
-    exit;
+
+// Security check to ensure only admins can access
+if ($_SESSION['role'] !== 'admin') {
+  header("Location: login-register.php");
+  exit();
 }
 
 // Database connection
 include 'connect.php';
 
-// Sorting logic
+// Sorting logic for GPUs
 $sortOption = isset($_GET['sort']) ? $_GET['sort'] : 'price_low_to_high';
 switch ($sortOption) {
     case 'price_low_to_high':
-        $order = "ORDER BY cpu_price ASC";
+        $order = "ORDER BY gpu_price ASC";
         break;
     case 'price_high_to_low':
-        $order = "ORDER BY cpu_price DESC";
+        $order = "ORDER BY gpu_price DESC";
         break;
     case 'newest_first':
-        $order = "ORDER BY cpu_date DESC";
+        $order = "ORDER BY gpu_date DESC";
         break;
     case 'highest_rated':
         $order = "ORDER BY rating DESC";
         break;
+    case 'gpu_performance':
+        $order = "ORDER BY gpu_performance DESC";
+        break;
     case 'brand':
-        $order = "ORDER BY cpu_brand ASC";
+        $order = "ORDER BY gpu_brand ASC";
         break;
     default:
-        $order = "ORDER BY cpu_price ASC";
+        $order = "ORDER BY gpu_price ASC";
 }
 
-// Fetch CPU data with sorting
-$query = "SELECT * FROM CPU $order";
+// Fetch GPU data with sorting
+$query = "SELECT * FROM GPU $order";
 $rows = mysqli_query($conn, $query);
 if (!$rows) {
     die("Query failed: " . mysqli_error($conn));
 }
 
+// Directory check
 if (!is_writable('img/')) {
     die("Directory 'img/' is not writable.");
 }
 
+// Add new GPU functionality
 if (isset($_POST["submit"])) {
-    // Insert new CPU record
-    $cpu_name = $_POST['cpu_name'];
-    $cpu_cores = $_POST['cpu_cores'];
-    $cpu_clock_speed = $_POST['cpu_clock_speed']; // for 3.1 to 3.8 GHz
-    $cpu_socket = $_POST['cpu_socket'];
-    $cpu_technology = $_POST['cpu_technology']; // e.g., 28nm
-    $cpu_date = $_POST['cpu_date'];
-    $cpu_price = $_POST['cpu_price'];
-    $cpu_brand = $_POST['cpu_brand'];
+    $gpu_name = $_POST['gpu_name'];
+    $gpu_brand = $_POST['gpu_brand'];
+    $gpu_performance = $_POST['gpu_performance'];
+    $gpu_type = $_POST['gpu_type'];
+    $gpu_date = $_POST['gpu_date'];
+    $gpu_price = $_POST['gpu_price'];
 
-    if ($_FILES["cpu_image"]["error"] === 4) {
+    if ($_FILES["gpu_image"]["error"] === 4) {
         echo "<script>alert('Image does not exist');</script>";
     } else {
-        $fileName = $_FILES["cpu_image"]["name"];
-        $fileSize = $_FILES["cpu_image"]["size"];
-        $tmpName = $_FILES["cpu_image"]["tmp_name"];
+        $fileName = $_FILES["gpu_image"]["name"];
+        $fileSize = $_FILES["gpu_image"]["size"];
+        $tmpName = $_FILES["gpu_image"]["tmp_name"];
 
         $validImageExtension = ['jpg', 'jpeg', 'png'];
         $imageExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
@@ -76,20 +80,22 @@ if (isset($_POST["submit"])) {
                 mkdir('img', 0777, true);
             }
             if (move_uploaded_file($tmpName, 'img/' . $newImageName)) {
-                $stmt = $conn->prepare("INSERT INTO CPU (cpu_name, cpu_cores, cpu_clock_speed, cpu_socket, cpu_technology, cpu_date, cpu_image, cpu_price, cpu_brand) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $conn->prepare("INSERT INTO GPU (gpu_name, gpu_brand, gpu_chipset, gpu_memory_size, gpu_base_clock, gpu_boost_clock, gpu_shaders, gpu_type, gpu_date, gpu_image, gpu_price) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 $stmt->bind_param(
-                    "sssssssss",
-                    $cpu_name,
-                    $cpu_cores,
-                    $cpu_clock_speed,
-                    $cpu_socket,
-                    $cpu_technology,
-                    $cpu_date,
+                    "sssssss",
+                    $gpu_name,
+                    $gpu_brand,
+                    $gpu_chipset,
+                    $gpu_memory_size,
+                    $gpu_base_clock,
+                    $gpu_boost_clock,
+                    $gpu_shaders,
+                    $gpu_type,
+                    $gpu_date,
                     $newImageName,
-                    $cpu_price,
-                    $cpu_brand
+                    $gpu_price
                 );
 
                 if ($stmt->execute()) {
@@ -107,10 +113,10 @@ if (isset($_POST["submit"])) {
     }
 }
 
-// Delete functionality
+// Delete functionality for GPU
 if (isset($_GET['delete_id'])) {
     $deleteId = $_GET['delete_id'];
-    $deleteQuery = "DELETE FROM CPU WHERE cpu_id = ?";
+    $deleteQuery = "DELETE FROM GPU WHERE gpu_id = ?";
     $stmt = $conn->prepare($deleteQuery);
     $stmt->bind_param("i", $deleteId);
 
@@ -123,50 +129,50 @@ if (isset($_GET['delete_id'])) {
     }
 }
 
-// Edit functionality
+// Edit functionality for GPU
 if (isset($_GET['edit_id'])) {
     $editId = $_GET['edit_id'];
-    $editQuery = "SELECT * FROM CPU WHERE cpu_id = ?";
+    $editQuery = "SELECT * FROM GPU WHERE gpu_id = ?";
     $stmt = $conn->prepare($editQuery);
     $stmt->bind_param("i", $editId);
     $stmt->execute();
     $result = $stmt->get_result();
     $editRow = $result->fetch_assoc();
-    $cpu_name = $editRow['cpu_name'];
-    $cpu_cores = $editRow['cpu_cores'];
-    $cpu_clock_speed = $editRow['cpu_clock_speed'];
-    $cpu_socket = $editRow['cpu_socket'];
-    $cpu_technology = $editRow['cpu_technology'];
-    $cpu_date = $editRow['cpu_date'];
-    $cpu_price = $editRow['cpu_price'];
-    $cpu_brand = $editRow['cpu_brand'];
+
+    if ($editRow) {
+        $gpu_name = $editRow['gpu_name'];
+        $gpu_brand = $editRow['gpu_brand'];
+        $gpu_performance = $editRow['gpu_performance'];
+        $gpu_type = $editRow['gpu_type'];
+        $gpu_date = $editRow['gpu_date'];
+        $gpu_price = $editRow['gpu_price'];
+    } else {
+        echo "<script>alert('No GPU found with this ID.');</script>";
+        header('Location: admin-dashboard.php');
+        exit();
+    }
 }
 
-// Update functionality after form submission
 if (isset($_POST['edit_submit'])) {
-    $editId = $_POST['cpu_id'];
-    $cpu_name = $_POST['cpu_name'];
-    $cpu_cores = $_POST['cpu_cores'];
-    $cpu_clock_speed = $_POST['cpu_clock_speed'];
-    $cpu_socket = $_POST['cpu_socket'];
-    $cpu_technology = $_POST['cpu_technology'];
-    $cpu_date = $_POST['cpu_date'];
-    $cpu_price = $_POST['cpu_price'];
-    $cpu_brand = $_POST['cpu_brand'];
+    $editId = $_POST['gpu_id'];
+    $gpu_name = $_POST['gpu_name'];
+    $gpu_brand = $_POST['gpu_brand'];
+    $gpu_performance = $_POST['gpu_performance'];
+    $gpu_type = $_POST['gpu_type'];
+    $gpu_date = $_POST['gpu_date'];
+    $gpu_price = $_POST['gpu_price'];
 
-    $updateQuery = "UPDATE CPU SET cpu_name = ?, cpu_cores = ?, cpu_clock_speed = ?, cpu_socket = ?, cpu_technology = ?, cpu_date = ?, cpu_price = ?, cpu_brand = ? WHERE cpu_id = ?";
+    $updateQuery = "UPDATE GPU SET gpu_name = ?, gpu_brand = ?, gpu_performance = ?, gpu_type = ?, gpu_date = ?, gpu_price = ? WHERE gpu_id = ?";
     $stmt = $conn->prepare($updateQuery);
     $stmt->bind_param(
-        "ssssssdsi", // Type definitions: s=string, d=double (for price), i=integer
-        $cpu_name,
-        $cpu_cores,
-        $cpu_clock_speed,
-        $cpu_socket,
-        $cpu_technology,
-        $cpu_date,
-        $cpu_price, // Double for price
-        $cpu_brand,
-        $editId // Integer for ID
+        "ssssssi",
+        $gpu_name,
+        $gpu_brand,
+        $gpu_performance,
+        $gpu_type,
+        $gpu_date,
+        $gpu_price,
+        $editId
     );
     
     if ($stmt->execute()) {
@@ -177,8 +183,8 @@ if (isset($_POST['edit_submit'])) {
         echo "<script>alert('Error updating record: " . $stmt->error . "');</script>";
     }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -187,6 +193,7 @@ if (isset($_POST['edit_submit'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="css/adminpage.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 </head>
 <body>
   <div class="dashboard">
@@ -199,12 +206,14 @@ if (isset($_POST['edit_submit'])) {
         <a href="#" data-category="gpu">GPU</a>
         <a href="#" data-category="ram">RAM</a>
       </nav>
+      <a href="logout.php"><button class="button">Logout</button></a>
     </aside>
+    
     <main class="main-content">
       <div class="crud-header">
-        <h1>Dashboard</h1>
+        <h1 class="fw-bold text-neutral fs-sub-normal">Graphics Processing Unit (GPU)</h1>
         <div class="crud-buttons">
-          <button id="addBtn" onclick="toggleAddCPUForm()">Add</button>
+          <button id="addBtn" onclick="toggleAddGPUForm()">Add</button>
         </div>
       </div>
 
@@ -215,123 +224,102 @@ if (isset($_POST['edit_submit'])) {
           <option value="price_low_to_high" <?php if ($sortOption == 'price_low_to_high') echo 'selected'; ?>>Price: Low to High</option>
           <option value="newest_first" <?php if ($sortOption == 'newest_first') echo 'selected'; ?>>Newest First</option>
           <option value="highest_rated" <?php if ($sortOption == 'highest_rated') echo 'selected'; ?>>Highest Rated</option>
+          <option value="gpu_performance" <?php if ($sortOption == 'gpu_performance') echo 'selected'; ?>>GPU Performance</option>
           <option value="brand" <?php if ($sortOption == 'brand') echo 'selected'; ?>>Brand</option>
         </select>
+        <span class="caret"><i class="fa-solid fa-caret-down"></i></span>
       </div>
 
-     <!-- Add Form -->
-      <div id="addCPUForm" style="display: none">
-        <h2>Upload CPU Details</h2>
-        <form action="admin-dashboard.php" method="POST" enctype="multipart/form-data">
-          <label for="cpu_name">CPU Name:</label>
-          <input type="text" name="cpu_name" id="cpu_name" required><br><br>
+      <!-- Add GPU Form -->
+      <div id="addGPUFormModal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeAddGPUForm()">&times;</span>
+          <h2 class="fw-bold fs-normal">Upload GPU Details</h2>
+          <form action="admin-dashboard.php" method="POST" enctype="multipart/form-data">
+    <label for="gpu_name">GPU Name:</label>
+    <input type="text" name="gpu_name" id="gpu_name" required><br><br>
 
-          <label for="cpu_cores">CPU Cores:</label>
-          <input type="number" name="cpu_cores" id="cpu_cores" required><br><br>
+    <label for="gpu_brand">GPU Brand:</label>
+    <input type="text" name="gpu_brand" id="gpu_brand" required><br><br>
 
-          <label for="cpu_clock_speed">Clock Speed (GHz):</label>
-          <input type="text" name="cpu_clock_speed" id="cpu_clock_speed" required><br><br>
+    <label for="gpu_chipset">GPU Chipset:</label>
+    <input type="text" name="gpu_chipset" id="gpu_chipset" required><br><br>
 
-          <label for="cpu_socket">CPU Socket:</label>
-          <input type="text" name="cpu_socket" id="cpu_socket" required><br><br>
+    <label for="gpu_memory_size">GPU Memory Size:</label>
+    <input type="text" name="gpu_memory_size" id="gpu_memory_size" required><br><br>
 
-          <label for="cpu_technology">Manufacturing Technology (e.g., 28nm):</label>
-          <input type="text" name="cpu_technology" id="cpu_technology" required><br><br>
+    <label for="gpu_base_clock">GPU Base Clock:</label>
+    <input type="text" name="gpu_base_clock" id="gpu_base_clock" required><br><br>
 
-          <label for="cpu_date">Release Date:</label>
-          <input type="date" name="cpu_date" id="cpu_date" required><br><br>
+    <label for="gpu_boost_clock">GPU Boost Clock:</label>
+    <input type="text" name="gpu_boost_clock" id="gpu_boost_clock" required><br><br>
 
-          <label for="cpu_image">CPU Image:</label>
-          <input type="file" name="cpu_image" id="cpu_image" accept=".jpg, .jpeg, .png" required><br><br>
+    <label for="gpu_shaders">GPU Shaders:</label>
+    <input type="text" name="gpu_shaders" id="gpu_shaders" required><br><br>
 
-          <label for="cpu_price">CPU Price (in PHP):</label>
-          <input type="number" step="0.01" name="cpu_price" id="cpu_price" required><br><br>
+    <label for="gpu_type">GPU Type:</label>
+    <input type="text" name="gpu_type" id="gpu_type" required><br><br>
 
-          <label for="cpu_brand">CPU Brand:</label>
-          <input type="text" name="cpu_brand" id="cpu_brand" required><br><br>
+    <label for="gpu_date">Release Date:</label>
+    <input type="date" name="gpu_date" id="gpu_date" required><br><br>
 
-          <button type="submit" name="submit">Upload CPU</button>
-        </form>
+    <label for="gpu_image">GPU Image:</label>
+    <input type="file" name="gpu_image" id="gpu_image" accept=".jpg, .jpeg, .png" required><br><br>
+
+    <label for="gpu_price">GPU Price (in PHP):</label>
+    <input type="number" step="0.01" name="gpu_price" id="gpu_price" required><br><br>
+
+    <button type="submit" name="submit">Upload GPU</button>
+</form>
+
+        </div>
       </div>
-      
-
-      <!-- Edit Form -->
-<?php if (isset($_GET['edit_id'])): ?>
-<div id="editCPUForm">
-  <h2>Edit CPU Details</h2>
-  <form method="POST" action="admin-dashboard.php" enctype="multipart/form-data">
-    <input type="hidden" name="cpu_id" value="<?php echo $editId; ?>">
-
-    <label for="cpu_name">CPU Name:</label>
-    <input type="text" name="cpu_name" value="<?php echo htmlspecialchars($cpu_name); ?>" required><br><br>
-
-    <label for="cpu_cores">CPU Cores:</label>
-    <input type="number" name="cpu_cores" value="<?php echo htmlspecialchars($cpu_cores); ?>" required><br><br>
-
-    <label for="cpu_clock_speed">Clock Speed (GHz):</label>
-    <input type="text" name="cpu_clock_speed" value="<?php echo htmlspecialchars($cpu_clock_speed); ?>" required><br><br>
-
-    <label for="cpu_socket">CPU Socket:</label>
-    <input type="text" name="cpu_socket" value="<?php echo htmlspecialchars($cpu_socket); ?>" required><br><br>
-
-    <label for="cpu_technology">Manufacturing Technology (e.g., 28nm):</label>
-    <input type="text" name="cpu_technology" value="<?php echo htmlspecialchars($cpu_technology); ?>" required><br><br>
-
-    <label for="cpu_date">Release Date:</label>
-    <input type="date" name="cpu_date" value="<?php echo htmlspecialchars($cpu_date); ?>" required><br><br>
-
-    <label for="cpu_image">CPU Image:</label>
-    <input type="file" name="cpu_image" accept=".jpg, .jpeg, .png"><br><br>
-
-    <label for="cpu_price">CPU Price (in PHP):</label>
-    <input type="number" step="0.01" name="cpu_price" value="<?php echo htmlspecialchars($cpu_price); ?>" required><br><br>
-
-    <label for="cpu_brand">CPU Brand:</label>
-    <input type="text" name="cpu_brand" value="<?php echo htmlspecialchars($cpu_brand); ?>" required><br><br>
-
-    <button type="submit" name="edit_submit">Update CPU</button>
-  </form>
-</div>
-<?php endif; ?>
-
 
       <div class="crud-table">
-        <table id="cpuTable">
+        <table id="gpuTable">
           <thead>
             <tr>
               <th>#</th>
               <th>Image</th>
               <th>Brand</th>
               <th>Name</th>
-              <th>Cores</th>
-              <th>Clock Speed</th>
-              <th>Socket</th>
-              <th>Technology</th>
+              <th>Chipset</th>
+              <th>Memory Size</th>
+              <th>Base Clock</th>
+              <th>Boost Clock</th>
+              <th>Shaders</th>
+              <th>Type</th>
               <th>Price</th>
               <th>Release Date</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="cpuTableBody">
+          <tbody id="gpuTableBody">
             <?php 
             $count = 1;
             while ($row = mysqli_fetch_assoc($rows)): ?>
               <tr>
                 <td><?php echo $count++; ?></td>
                 <td>
-                  <img src="img/<?php echo htmlspecialchars($row['cpu_image']); ?>" alt="CPU Image" style="width: 50px; height: auto;">
+                  <img src="img/<?php echo htmlspecialchars($row['gpu_image']); ?>" alt="GPU Image" style="width: 50px; height: auto;">
                 </td>
-                <td><?php echo htmlspecialchars($row['cpu_brand']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_name']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_cores']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_clock_speed']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_socket']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_technology']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_price']); ?></td>
-                <td><?php echo htmlspecialchars($row['cpu_date']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_brand']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_chipset']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_memory_size']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_base_clock']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_boost_clock']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_shaders']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_date']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_price']); ?></td>
+                <td><?php echo htmlspecialchars($row['gpu_date']); ?></td>
                 <td>
-                    <a href="admin-dashboard.php?edit_id=<?php echo $row['cpu_id']; ?>" onclick="toggleEditCPUForm(event, '<?php echo $row['cpu_id']; ?>')" class="edit-link">Edit</a>
-                  <a href="admin-dashboard.php?delete_id=<?php echo $row['cpu_id']; ?>" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+                    <a href="admin-dashboard.php?edit_id=<?php echo $row['gpu_id']; ?>" onclick="openEditModal(event, '<?php echo $row['gpu_id']; ?>')" class="edit-link"> 
+                        <i class="edit-button fas fa-edit"></i> 
+                    </a>
+                    <a href="admin-dashboard.php?delete_id=<?php echo $row['gpu_id']; ?>" onclick="return confirm('Are you sure you want to delete this?')">
+                        <i class="delete-button fas fa-trash-alt"></i>
+                    </a>
                 </td>
               </tr>
             <?php endwhile; ?>

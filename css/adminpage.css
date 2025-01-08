@@ -1,3 +1,237 @@
+:root {
+
+    --clr-primary-dark: #191722;
+    --clr-primary-light: #242131;
+
+    --clr-neutral: #FFFFFF;
+    --clr-accent: #9D87FF;
+
+    --ff-primary: 'Helvetica', sans-serif;
+
+    --fw-bold: 700;
+    --fw-regular: 400;
+    --fw-light: 200;
+
+    --fs-18: 1.125rem;
+    --fs-32: 2rem;
+    --fs-64: 4rem;
+    --fs-85: 5rem;
+
+    --item0-transform: translate(-80%, 20%) scale(0.3);
+    --item0-filter: blur(10px);
+    --item0-zIndex: 9;
+    --item0-opacity: 1;
+
+    --item1-transform: translate(-50%, 20%) scale(0.8);
+    --item1-filter: blur(10px);
+    --item1-zIndex: 9;
+    --item1-opacity: 1;
+
+    --item2-transform: translate(0, 0);
+    --item2-filter: blur(0);
+    --item2-zIndex: 10;
+    --item2-opacity: 1;
+    
+    --item3-transform: translate(50%, 20%) scale(0.8);
+    --item3-filter: blur(10px);
+    --item3-zIndex: 9;
+    --item3-opacity: 1;
+
+    --item4-transform: translate(80%, 40%) scale(0.3);
+    --item4-filter: blur(5px);
+    --item4-zIndex: 8;
+    --item4-opacity: 10;
+
+}
+
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+  
+  /* 2. Remove default margin */
+* {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    font-family: var(--ff-primary);
+    scroll-behavior: smooth;
+}
+
+ul[role="list"],
+ol[role="list"] {
+    list-style: none;
+}
+
+html:focus-within {
+    scroll-behavior: smooth;
+}
+  
+html, body {
+    height: 100%;
+}
+
+body {
+    z-index: 10;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background: var(--clr-primary-light);
+    overflow-x: hidden;
+}
+  
+/* 5. Improve media defaults */
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+  
+/* 7. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+  
+/* 8. Improve line wrapping */
+p {
+    text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+}
+  
+  /*
+    9. Create a root stacking context
+  */
+#root, #__next {
+    isolation: isolate;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.text-primary-heading {
+    display: inline-block;
+    white-space: normal; /* Allow text to wrap */
+    background: linear-gradient(113deg, #EAE6FF 22.73%, #9D87FF 67.76%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    word-wrap: break-word; /* Ensure long words break */
+    line-height: 5.2rem;
+}
+
+.text-primary-dark {
+    color: var(--clr-primary-dark);
+}
+
+.text-primary-light {
+    color: var(--clr-primary-light);
+}
+
+.text-neutral {
+    color: var(--clr-neutral);
+}
+
+.text-accent {
+    color: var(--clr-accent);
+}
+
+.bg-primary-dark {
+    color: var(--clr-primary-dark);
+}
+
+.bg-primary-light {
+    color: var(--clr-primary-light);
+}
+
+.bg-neutral {
+    color: var(--clr-neutral);
+}
+
+.bg-accent {
+    color: var(--clr-accent);
+}
+
+.fw-bold {
+    font-weight: var(--fw-bold);
+}
+
+.fw-regular {
+    font-weight: var(--fw-regular);
+}
+
+.fw-light {
+    font-weight: var(--fw-light);
+}
+
+.fs-normal {
+    font-size: var(--fs-18);
+}
+
+.fs-sub-normal {
+    font-size: var(--fs-32);
+}
+
+.fs-primary-heading {
+    font-size: var(--fs-85);
+}
+
+.fs-secondary-heading {
+    font-size: var(--fs-64);
+}
+
+.text-center {
+    display: flex;
+    justify-content: center;
+}
+
+.padding-block {
+    --padding-block: 5rem;
+
+    padding-block: var(--padding-block);
+}
+
+.container {
+    --max-width: 1220px;
+    --padding: 2rem;
+
+    width: min(var(--max-width), 100% - (var(--padding)*2));
+    margin-inline: auto;
+
+}
+
+:where(.flow :not(:first-child)) {
+    margin-top: var(--flow-spacer, 2em);
+}
+
+.even-columns {
+    display: grid;
+    gap: 3rem;
+}
+
+@media (min-width: 50em) {
+    .even-columns {
+        grid-auto-flow: column;
+        grid-auto-columns: 2fr;
+    }
+}
+
+.even-flex {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 3rem;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -48,6 +282,25 @@ body {
     background-color: #34495e;
   }
   
+  .button {
+    display: inline-flex;
+    border: none;
+    border-radius: 100vmax;
+    padding: 0.5em 1.5em;
+    background: #9D87FF;
+    font-weight: var(--fw-regular);
+    font-size: var(--fs-18);
+    color: var(--clr-neutral);
+    cursor: pointer;
+    transition: font-weight 0.1s ease-in, box-shadow 0.1s ease-in;
+}
+
+
+.button:hover, .button:focus-within {
+    box-shadow: 0 0 10px rgba(157, 135, 255, 0.58);
+    font-weight: var(--fw-bold);
+}
+
   .main-content {
     flex: 1;
     background: linear-gradient(rgba(36, 33, 49, 0.8), rgba(36, 33, 49, 0.8)), url('../assets/background.jpg') no-repeat center center fixed;
@@ -87,6 +340,7 @@ body {
   }
   
   .crud-table table {
+    margin-top: 2rem;
     width: 100%;
     border-collapse: collapse;
     table-layout: auto;
@@ -235,5 +489,229 @@ body {
     background-color: #f4f4f4;
     border-radius: 8px;
 }
+
+/* General container for the dropdown */
+.sort-all {
+    display: flex;
+    align-items: center;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: var(--clr-neutral);
+}
+
+.sort-label {
+    margin-right: 10px;
+}
+
+/* Wrapper to position the custom dropdown */
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+}
+
+/* Style for the select element */
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent; /* Black background */
+    color: #fff; /* White text */
+    border: 2px solid #9c65f7; /* Purple border */
+    border-radius: 30px; /* Rounded edges */
+    padding: 10px 20px;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+/* Hover and focus states */
+.custom-select:hover,
+.custom-select:focus {
+    border-color: #bb86fc; /* Slightly brighter purple for interaction */
+    outline: none;
+}
+
+/* Ensure dropdown fits visually with the design */
+.custom-select option {
+    background-color: #000; /* Black background for dropdown items */
+    color: #fff;
+    padding: 10px;
+}
+
+.sort-all .caret {
+    position: relative;
+    top: 50%;
+    right: 1.5rem;
+    transform: translateY(-50%);
+    pointer-events: none; /* Makes the caret non-clickable */
+    font-size: 14px;
+    color: #333;
+}
+
+.crud-table a {
+    text-decoration: none;
+}
+
+.edit-button {
+    color: rgb(57, 57, 57);
+    font-size: 1.5rem;
+}
+
+.edit-button:hover,
+.edit-button:active {
+    color: rgb(115, 115, 115);
+}
+
+
+.delete-button {
+    color: red;
+    font-size: 1.5rem;
+}
+
+.delete-button:hover,
+.delete-button:active {
+    color: rgb(255, 131, 131);
+}
+
+#addCPUForm {
+    display: flex;
+    flex-flow: wrap;
+    overflow: hidden;
+
+    h2 {
+        text-align: center;
+        padding-bottom: 2rem;
+    }
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scrolling if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+    padding-top: 60px;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .modal-content {
+    background-color:  var(--clr-neutral);
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Adjust size */
+    max-width: 600px; /* Limit the maximum width */
+    animation: modalOpen 0.5s ease-out;
+
+    h2 {
+        text-align: center;
+        padding-bottom: 2rem;
+        
+    }
+  }
+  
+  /* Modal close button */
+  .close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close-btn:hover,
+  .close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Animation for opening the modal */
+  @keyframes modalOpen {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="file"],
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  button[type="submit"] {
+    background-color: var(--clr-primary-light);
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: var(--clr-primary-dark);
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close-btn:hover {
+    color: #000;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+
+  
 
 

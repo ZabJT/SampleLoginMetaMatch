@@ -183,10 +183,6 @@ function toggleEditCPUForm(event, editId) {
   const editForm = document.getElementById("editCPUForm");
 
 
-  // Optionally, update the form action with the selected ID
-  const urlParams = new URLSearchParams(window.location.search);
-  urlParams.set("edit_id", editId);
-  history.replaceState(null, "", `?${urlParams.toString()}`);
 
   // Toggle visibility
   if (editForm.style.display === "none" || editForm.style.display === "") {
@@ -194,6 +190,12 @@ function toggleEditCPUForm(event, editId) {
   } else {
     editForm.style.display = "none";
   }
+
+
+  // Optionally, update the form action with the selected ID
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set("edit_id", editId);
+  history.replaceState(null, "", `?${urlParams.toString()}`);
 
 }
 
@@ -253,3 +255,46 @@ function applySort() {
   const sortValue = document.getElementById("sort").value;
   window.location.href = `admin-dashboard.php?sort=${sortValue}`;
 }
+
+// Open the modal
+function toggleAddCPUForm() {
+  document.getElementById("addCPUFormModal").style.display = "block";
+}
+
+// Close the modal
+function closeAddCPUForm() {
+  document.getElementById("addCPUFormModal").style.display = "none";
+}
+
+// When the user clicks anywhere outside the modal, close it
+window.onclick = function(event) {
+  var modal = document.getElementById("addCPUFormModal");
+  if (event.target == modal) {
+    closeAddCPUForm();
+  }
+}
+
+
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = "block";
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = "none";
+}
+
+// Example to populate Edit Form Modal
+function openEditModal(cpuId, data) {
+  document.getElementById('edit_cpu_id').value = cpuId;
+  document.getElementById('edit_cpu_name').value = data.cpu_name;
+  document.getElementById('edit_cpu_cores').value = data.cpu_cores;
+  document.getElementById('edit_cpu_clock_speed').value = data.cpu_clock_speed;
+  document.getElementById('edit_cpu_socket').value = data.cpu_socket;
+  document.getElementById('edit_cpu_technology').value = data.cpu_technology;
+  document.getElementById('edit_cpu_date').value = data.cpu_date;
+  document.getElementById('edit_cpu_price').value = data.cpu_price;
+  document.getElementById('edit_cpu_brand').value = data.cpu_brand;
+
+  openModal('editCPUFormModal');
+}
+
