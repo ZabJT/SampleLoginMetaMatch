@@ -18,21 +18,6 @@ header img {
     height: auto;
 }
 
-.btn {
-    display: inline-flex; 
-    color: white;
-    border-radius: 1.875rem;
-    padding: 0.5rem 3rem;
-    font-size: 1rem;
-    text-align: center;
-    white-space: normal; 
-    word-wrap: break-word; 
-    line-height: 1.5; 
-    max-width: 100%;
-    align-self: center;
-    cursor: pointer;
-}
-
 p {
     color: #FFF;
     font-style: normal;
